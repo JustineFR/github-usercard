@@ -6,7 +6,8 @@
 
 axios.get('https://api.github.com/users/justineFR')
 .then((response) => {
-  console.log(response.data);
+  // console.log(response.data);
+  // Add the component to the DOM
   cards.appendChild(createCard(response.data));
   // OR const cardInfo = createCard(response.data)
   // cards.appenChild(cardInfo)
@@ -18,6 +19,9 @@ axios.get('https://api.github.com/users/justineFR')
 const cards = document.querySelector('.cards')
 
 
+
+
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -26,11 +30,7 @@ const cards = document.querySelector('.cards')
 */
 
 /* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
-
-
-
+           create a new component and add it to the DOM as a child of .cards*/
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -124,7 +124,7 @@ const followersArray = [
 followersArray.forEach(user => {
   axios.get(`https://api.github.com/users/${user}`)
   .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       cards.appendChild(createCard(response.data))
       // const card = createCard(response.data);
       // cards.appendChild(card)
@@ -133,3 +133,38 @@ followersArray.forEach(user => {
     console.log('This is an error ', error)
   })
 })
+
+
+
+// Stretch
+
+const jFollowers = [];
+
+
+function followers() {
+  axios.get('https://api.github.com/users/justineFR/followers')
+  .then((response) => {
+    console.log(response.data);
+    // Add the component to the DOM
+    response.data.forEach(data => {
+      jFollowers.push(data.login)
+    })
+
+    jFollowers.forEach(user => {
+      axios.get(`https://api.github.com/users/${user}`)
+      .then((response) => {
+          cards.appendChild(createCard(response.data))
+
+      })
+      // .catch((error) => {
+      //   console.log('This is an error ', error)
+      // })
+    })
+  
+  })
+  // .catch((error) => {
+  //   console.log("this is an error ", error)
+  // })
+  }
+  
+  followers()
