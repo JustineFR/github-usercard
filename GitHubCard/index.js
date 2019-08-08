@@ -2,6 +2,21 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+const cards = document.querySelector('.cards')
+
+axios.get('https://api.github.com/users/justineFR')
+.then((response) => {
+  // console.log(response.data);
+  cards.appendChild(createCard(response.data));
+  // OR const cardInfo = createCard(response.data)
+  // cards.appenChild(cardInfo)
+
+})
+.catch((error) => {
+  console.log("this is an error")
+})
+
+
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -24,7 +39,8 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+// const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -45,6 +61,55 @@ const followersArray = [];
 </div>
 
 */
+
+function createCard(data) {
+  // create elements
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  const img = document.createElement('img');
+  img.src = data.avatar_url;
+  card.appendChild(img);
+
+  const cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+  card.appendChild(cardInfo);
+
+  const name = document.createElement('h3');
+  name.classList.add('name');
+  name.textContent = data.name;
+  cardInfo.appendChild(name);
+
+  const userName = document.createElement('p');
+  userName.classList.add('username');
+  userName.textContent = data.login;
+  cardInfo.appendChild(userName);
+
+  const location = document.createElement('p');
+  location.textContent = data.location;
+  cardInfo.appendChild(location);
+
+  const profile = document.createElement('p');
+  cardInfo.appendChild(profile);
+
+  const link = document.createElement('a');
+  link.textContent = data.url;
+  profile.appendChild(link);
+
+  const followers = document.createElement('p');
+  followers.textContent = data.followers;
+  cardInfo.appendChild(followers);
+
+  const following = document.createElement('p');
+  following.textContent = data.following;
+  cardInfo.appendChild(following);
+
+  const bio = document.createElement('p');
+  bio.textContent = data.bio;
+  cardInfo.appendChild(bio);
+  
+return card;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
