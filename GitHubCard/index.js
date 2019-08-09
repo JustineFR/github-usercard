@@ -2,25 +2,18 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-
+const cards = document.querySelector('.cards')
 
 axios.get('https://api.github.com/users/justineFR')
-.then((response) => {
-  // console.log(response.data);
+.then(response => {
   // Add the component to the DOM
   cards.appendChild(createCard(response.data));
   // OR const cardInfo = createCard(response.data)
   // cards.appenChild(cardInfo)
 })
-.catch((error) => {
+.catch(error => {
   console.log("this is an error ", error)
-})
-
-const cards = document.querySelector('.cards')
-
-
-
-
+});
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -137,34 +130,12 @@ followersArray.forEach(user => {
 
 
 // Stretch
-
-const jFollowers = [];
-
-
-function followers() {
-  axios.get('https://api.github.com/users/justineFR/followers')
-  .then((response) => {
-    console.log(response.data);
-    // Add the component to the DOM
-    response.data.forEach(data => {
-      jFollowers.push(data.login)
-    })
-
-    jFollowers.forEach(user => {
-      axios.get(`https://api.github.com/users/${user}`)
-      .then((response) => {
-          cards.appendChild(createCard(response.data))
-
-      })
-      // .catch((error) => {
-      //   console.log('This is an error ', error)
-      // })
-    })
-  
-  })
-  // .catch((error) => {
-  //   console.log("this is an error ", error)
-  // })
-  }
-  
-  followers()
+axios.get('https://api.github.com/users/justineFR/followers')
+.then(response => {
+  response.data.forEach(follower => {
+    axios.get(`https://api.github.com/users/${follower.login}`)
+    .then(response => {
+      cards.appendChild(createCard(response.data))
+    });
+  });
+});
