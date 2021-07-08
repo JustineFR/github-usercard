@@ -2,6 +2,18 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+const cards = document.querySelector('.cards')
+
+axios.get('https://api.github.com/users/justineFR')
+.then(response => {
+  // Add the component to the DOM
+  cards.appendChild(createCard(response.data));
+  // OR const cardInfo = createCard(response.data)
+  // cards.appenChild(cardInfo)
+})
+.catch(error => {
+  console.log("this is an error ", error)
+});
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -11,20 +23,7 @@
 */
 
 /* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
-
-/* Step 5: Now that you have your own card getting added to the DOM, either 
-          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
-          , manually find some other users' github handles, or use the list found 
-          at the bottom of the page. Get at least 5 different Github usernames and add them as
-          Individual strings to the friendsArray below.
-          
-          Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
-*/
-
-const followersArray = [];
+           create a new component and add it to the DOM as a child of .cards*/
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -46,10 +45,97 @@ const followersArray = [];
 
 */
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
+function createCard(data) {
+  // create elements
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  const img = document.createElement('img');
+  img.src = data.avatar_url;
+  card.appendChild(img);
+
+  const cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+  card.appendChild(cardInfo);
+
+  const name = document.createElement('h3');
+  name.classList.add('name');
+  name.textContent = data.name;
+  cardInfo.appendChild(name);
+
+  const userName = document.createElement('p');
+  userName.classList.add('username');
+  userName.textContent = data.login;
+  cardInfo.appendChild(userName);
+
+  const location = document.createElement('p');
+  location.textContent = `City: ${data.location}`;
+  cardInfo.appendChild(location);
+
+  const profile = document.createElement('p');
+  cardInfo.appendChild(profile);
+
+  const link = document.createElement('a');
+  link.innerHTML = `Github profile: <a href=${data.html_url}>${data.html_url}</a>`;
+  profile.appendChild(link);
+
+  const followers = document.createElement('p');
+  followers.textContent = `Followers: ${data.followers}`;
+  cardInfo.appendChild(followers);
+
+  const following = document.createElement('p');
+  following.textContent = `Following: ${data.following}`;
+  cardInfo.appendChild(following);
+
+  const bio = document.createElement('p');
+  bio.textContent = data.bio || 'none';  /* 'none' will be displayed if no bio avail. */
+  cardInfo.appendChild(bio);
+  
+return card;
+}
+
+
+/* Step 5: Now that you have your own card getting added to the DOM, either 
+          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
+          , manually find some other users' github handles, or use the list found 
+          at the bottom of the page. Get at least 5 different Github usernames and add them as
+          Individual strings to the friendsArray below.
+          
+          Using that array, iterate over it, requesting data for each user, creating a new card for each
+          user, and adding that card to the DOM.
 */
+
+
+const followersArray = [
+  'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell'
+];
+
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then((response) => {
+      // console.log(response.data);
+      cards.appendChild(createCard(response.data))
+      // const card = createCard(response.data);
+      // cards.appendChild(card)
+  })
+  .catch((error) => {
+    console.log('This is an error ', error)
+  })
+})
+
+
+
+// Stretch
+axios.get('https://api.github.com/users/justineFR/followers')
+.then(response => {
+  response.data.forEach(follower => {
+    axios.get(`https://api.github.com/users/${follower.login}`)
+    .then(response => {
+      cards.appendChild(createCard(response.data))
+    });
+  });
+});
